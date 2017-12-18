@@ -1,0 +1,41 @@
+
+1. 
+follow the procedure at
+http://pktgen-dpdk.readthedocs.io/en/latest/getting_started.html
+in short 
+$ sudo vi /etc/sysctl.conf
+Add to the bottom of the file:
+vm.nr_hugepages=256
+git clone git://dpdk.org/dpdk
+clone git://dpdk.org/apps/pktgen-dpdk
+
+$ sudo vi /etc/fstab
+Add to the bottom of the file:
+huge /mnt/huge hugetlbfs defaults 0 0
+
+$ sudo mkdir /mnt/huge
+$ sudo chmod 777 /mnt/huge
+
+$ sudo apt-get install linux-headers-3.5.0-32-generic
+$ sudo apt-get install libpcap-dev
+[MY added]
+$ sudo apt-get install libnuma-dev
+[DPDKInstallDir and pktgeninstdir are the install dir of dpdk and packetgen] 
+
+export RTE_SDK=<DPDKInstallDir>
+export RTE_TARGET=x86_64-native-linuxapp-gcc
+
+$ cd $RTE_SDK
+[MY added DESTDIR]
+$ make install DESTDIR=<pktgeninstdir> T=x86_64-native-linuxapp-gcc
+
+sudo modprobe uio_pci_generic
+
+[ used dpdk pyton scripts to bind the generic driver for the port 0 and 1
+
+sudo usertools/dpdk-devbind.py --bind=uio_pci_generic 07:00.0 07:00.1
+
+
+[example of activation using the first 2 port with core 1 and 2] 
+sudo ~/pktgen-dpdk/app/x86_64-native-linuxapp-gcc/pktgen -l 0-3 -n 3 -- -P -m "1.0,2.1" -f test/my.txt
+
