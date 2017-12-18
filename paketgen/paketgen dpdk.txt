@@ -31,7 +31,7 @@ $ make install DESTDIR=<pktgeninstdir> T=x86_64-native-linuxapp-gcc
 
 sudo modprobe uio_pci_generic
 
-[ used dpdk pyton scripts to bind the generic driver for the port 0 and 1
+[ used dpdk pyton scripts to bind the generic driver for the port 0 and 1 ]
 
 sudo usertools/dpdk-devbind.py --bind=uio_pci_generic 07:00.0 07:00.1
 
